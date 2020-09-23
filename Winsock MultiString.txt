@@ -1,0 +1,62 @@
+------------------------------------
+MULTI STRING WINSOCK TRANSFER
+------------------------------------
+
+PURPOSE-------------------------------------------------------------------------
+	To send many strings throught winsock in only 1 packet!
+BEGINNING-------------------------------------------------------------------------
+	First you have to create a variable that will hold your strings (DIM cSend as String).
+	Next you have to add the strings to the variable 
+	(cSend = text1.text & chr(0) & text2.text & chr(0) & text3.text)
+	Note: chr(0) is used to mark where one string ends and where another begins.
+	Afterwards send the data through winsock (Winsock1.SendData cSend).
+
+	To receive the strings you must create a variable the hold the received data
+	(rData as String). Next in the "Sub Winsock1_ReceiveData" you must put the data
+	into the variable (Winsock1.GetData rData). Now you must start breaking down the code.
+	To do so Dim a variable to be used for the "For Loop" (dim x as integer) and DIM as
+	variable to be used in the loop (Dim strLetter as String). Aslo DIM as variable to be
+	later used as a counter (Dim strCount as integer) and give it a value of "0"
+	(strCount = 0) then DIM another variable as a character holder 
+	(Dim ChrHolder as String). Now write the for loop (For x = 1 to len(rData)). 
+	Next is to set the variable as each individual Letter in the string 
+	(strLetter = mid(rdata, x, 1)). Next check to see if the selected letter is your 
+	seperation character (if strLetter = chr(0) then). If it is then start your case 
+	selection (select case strCount). Depending on how may strings you plan of receiveing
+	may add more cases to the statement. As for now there are only going to be three. When this
+	function starts the first characters in the string will not be your seperator character so
+	the function will move to your else statement. What it will do is until it finds a seperator
+	character it will add each individual characher to itself. When it find the seperator character
+	it will go the the select case statement. Considering that you have strCount set as 0 it will
+	select the case "0" and put the first string in text1.text, then it will add 1 to strCount
+	so when it finds another Seperator character it will move to the next case in the satement.
+	This code in return will seperate your strings into seperate textboxes or anyother object
+	you choose.
+
+EXAMPLE-------------------------------------------------------------------------
+	Dim rData as String
+	Winsock1.GetData rData
+	Dim x as Integer
+	Dim strLetter as string
+	Dim strCount as integer
+	Dim ChrHolder as String
+	for x = 1 to len(rData)
+		strLetter = mid(rdata, x, 1)
+		if strLetter = chr(0) then
+			select case strCount
+			case "0"
+				Text1.Text = ChrHolder
+			case "1"
+				Text2.Text = ChrHolder
+			case "2"
+				Text3.Text = ChrHolder
+			end select
+			strCount = strCount + 1
+			ChrHolder = ""
+		else
+			ChrHolder = ChrHolder & strLetter
+		end if
+	Next
+-------------------------------------------------------------------------
+Created by Szafran, July 10, 2003 - ew16301@yahoo.com
+-------------------------------------------------------------------------
